@@ -6,134 +6,108 @@
 
 <style>
 body{margin:0;font-family:Arial;background:#020617;color:white}
-header{background:#020617;padding:15px;border-bottom:1px solid #111}
-.logo{font-size:22px;font-weight:bold}
-input{width:100%;padding:10px;border-radius:8px;border:none;background:#0f172a;color:white;margin-top:10px}
-
+header{padding:15px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:15px;padding:15px}
-.card{background:#0f172a;border-radius:12px;overflow:hidden;cursor:pointer;transition:.2s}
-.card:hover{transform:scale(1.05)}
+.card{background:#0f172a;border-radius:12px;overflow:hidden;cursor:pointer}
 .card img{width:100%;height:220px;object-fit:cover}
 .card h3{padding:10px;font-size:14px}
-
 .playerPage{display:none;padding:10px}
-iframe{width:100%;height:75vh;border:none;border-radius:10px;background:black}
-
-.ep{background:#2563eb;padding:8px;margin:5px;border-radius:8px;display:inline-block;cursor:pointer}
-.back{margin-bottom:10px;display:inline-block;background:#111;padding:8px 12px;border-radius:8px;cursor:pointer}
-.full{background:red;padding:8px 12px;border-radius:8px;margin-left:10px;cursor:pointer}
+iframe{width:100%;height:80vh;border:none;border-radius:10px}
+.ep{background:#2563eb;padding:8px;margin:4px;border-radius:8px;display:inline-block;cursor:pointer}
+.back{background:#111;padding:8px;border-radius:8px;cursor:pointer;margin-bottom:10px;display:inline-block}
+.full{background:red;padding:8px;border-radius:8px;cursor:pointer;margin-left:10px}
 </style>
 </head>
 
 <body>
 
 <header>
-<div class="logo">AniWatch</div>
-<input placeholder="Search anime..." onkeyup="searchAnime(this.value)">
+<h2>AniWatch</h2>
 </header>
 
 <div id="home" class="grid"></div>
 
 <div id="playerPage" class="playerPage">
-<div class="back" onclick="goHome()">⬅ Back</div>
-<div class="full" onclick="goFull()">FULLSCREEN</div>
+<div class="back" onclick="goHome()">BACK</div>
+<div class="full" onclick="goFull()">FULL</div>
 <br><br>
 <iframe id="frame"></iframe>
 <div id="eps"></div>
 </div>
 
 <script>
-const animeList = [
+
+function generateEpisodes(id,total){
+let arr=[]
+for(let i=1;i<=total;i++){
+arr.push(`https://vidsrc.xyz/embed/tv/${id}/1/${i}`)
+}
+return arr
+}
+
+const animeList=[
 
 {
 title:"Naruto",
 img:"https://i.imgur.com/4KX7K2K.jpg",
-episodes:[
-"https://vidsrc.xyz/embed/tv/46260/1/1",
-"https://vidsrc.xyz/embed/tv/46260/1/2",
-"https://vidsrc.xyz/embed/tv/46260/1/3",
-"https://vidsrc.xyz/embed/tv/46260/1/4",
-"https://vidsrc.xyz/embed/tv/46260/1/5"
-]
+episodes:generateEpisodes(46260,220)
 },
 
 {
 title:"Bleach",
 img:"https://i.imgur.com/qn7f4FQ.jpg",
-episodes:[
-"https://vidsrc.xyz/embed/tv/30984/1/1",
-"https://vidsrc.xyz/embed/tv/30984/1/2",
-"https://vidsrc.xyz/embed/tv/30984/1/3"
-]
+episodes:generateEpisodes(30984,366)
 },
 
 {
 title:"Jujutsu Kaisen",
 img:"https://i.imgur.com/2yaf2wb.jpg",
-episodes:[
-"https://vidsrc.xyz/embed/tv/95479/1/1",
-"https://vidsrc.xyz/embed/tv/95479/1/2",
-"https://vidsrc.xyz/embed/tv/95479/1/3"
-]
+episodes:generateEpisodes(95479,24)
 }
 
 ];
 
-const home=document.getElementById("home");
-const player=document.getElementById("playerPage");
-const frame=document.getElementById("frame");
-const eps=document.getElementById("eps");
+const home=document.getElementById("home")
+const player=document.getElementById("playerPage")
+const frame=document.getElementById("frame")
+const eps=document.getElementById("eps")
 
 function load(){
-home.innerHTML="";
+home.innerHTML=""
 animeList.forEach((a,i)=>{
 home.innerHTML+=`
 <div class="card" onclick="openAnime(${i})">
 <img src="${a.img}">
 <h3>${a.title}</h3>
-</div>`;
-});
+</div>`
+})
 }
-load();
+load()
 
 function openAnime(i){
-home.style.display="none";
-player.style.display="block";
-playEp(i,0);
+home.style.display="none"
+player.style.display="block"
+playEp(i,0)
 }
 
 function playEp(i,e){
-frame.src=animeList[i].episodes[e];
-eps.innerHTML="";
+frame.src=animeList[i].episodes[e]
+eps.innerHTML=""
 animeList[i].episodes.forEach((x,n)=>{
-eps.innerHTML+=`<div class="ep" onclick="playEp(${i},${n})">EP ${n+1}</div>`;
-});
+eps.innerHTML+=`<div class="ep" onclick="playEp(${i},${n})">${n+1}</div>`
+})
 }
 
 function goHome(){
-player.style.display="none";
-home.style.display="grid";
-frame.src="";
-}
-
-function searchAnime(q){
-q=q.toLowerCase();
-home.innerHTML="";
-animeList.forEach((a,i)=>{
-if(a.title.toLowerCase().includes(q)){
-home.innerHTML+=`
-<div class="card" onclick="openAnime(${i})">
-<img src="${a.img}">
-<h3>${a.title}</h3>
-</div>`;
-}
-});
+player.style.display="none"
+home.style.display="grid"
+frame.src=""
 }
 
 function goFull(){
-frame.requestFullscreen();
+frame.requestFullscreen()
 }
-</script>
 
+</script>
 </body>
 </html>

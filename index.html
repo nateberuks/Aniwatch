@@ -6,10 +6,9 @@
 
 <style>
 body{margin:0;font-family:Arial;background:#020617;color:white}
-header{background:#020617;padding:15px;position:sticky;top:0;border-bottom:1px solid #111}
+header{background:#020617;padding:15px;border-bottom:1px solid #111}
 .logo{font-size:22px;font-weight:bold}
-.search{margin-top:10px}
-input{width:100%;padding:10px;border-radius:8px;border:none;background:#0f172a;color:white}
+input{width:100%;padding:10px;border-radius:8px;border:none;background:#0f172a;color:white;margin-top:10px}
 
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:15px;padding:15px}
 .card{background:#0f172a;border-radius:12px;overflow:hidden;cursor:pointer;transition:.2s}
@@ -17,11 +16,12 @@ input{width:100%;padding:10px;border-radius:8px;border:none;background:#0f172a;c
 .card img{width:100%;height:220px;object-fit:cover}
 .card h3{padding:10px;font-size:14px}
 
-.player{display:none;padding:10px}
-iframe{width:100%;height:220px;border:none;border-radius:10px}
+.playerPage{display:none;padding:10px}
+iframe{width:100%;height:75vh;border:none;border-radius:10px;background:black}
 
 .ep{background:#2563eb;padding:8px;margin:5px;border-radius:8px;display:inline-block;cursor:pointer}
-.back{margin:10px 0;display:inline-block;background:#111;padding:8px 12px;border-radius:8px;cursor:pointer}
+.back{margin-bottom:10px;display:inline-block;background:#111;padding:8px 12px;border-radius:8px;cursor:pointer}
+.full{background:red;padding:8px 12px;border-radius:8px;margin-left:10px;cursor:pointer}
 </style>
 </head>
 
@@ -29,42 +29,60 @@ iframe{width:100%;height:220px;border:none;border-radius:10px}
 
 <header>
 <div class="logo">AniWatch</div>
-<div class="search">
 <input placeholder="Search anime..." onkeyup="searchAnime(this.value)">
-</div>
 </header>
 
 <div id="home" class="grid"></div>
 
-<div id="player" class="player">
+<div id="playerPage" class="playerPage">
 <div class="back" onclick="goHome()">⬅ Back</div>
+<div class="full" onclick="goFull()">FULLSCREEN</div>
+<br><br>
 <iframe id="frame"></iframe>
 <div id="eps"></div>
 </div>
 
 <script>
 const animeList = [
+
 {
 title:"Naruto",
 img:"https://i.imgur.com/4KX7K2K.jpg",
 episodes:[
 "https://vidsrc.xyz/embed/tv/46260/1/1",
-"https://vidsrc.xyz/embed/tv/46260/1/2"
+"https://vidsrc.xyz/embed/tv/46260/1/2",
+"https://vidsrc.xyz/embed/tv/46260/1/3",
+"https://vidsrc.xyz/embed/tv/46260/1/4",
+"https://vidsrc.xyz/embed/tv/46260/1/5"
 ]
 },
+
 {
 title:"Bleach",
 img:"https://i.imgur.com/qn7f4FQ.jpg",
 episodes:[
-"https://vidsrc.xyz/embed/tv/30984/1/1"
+"https://vidsrc.xyz/embed/tv/30984/1/1",
+"https://vidsrc.xyz/embed/tv/30984/1/2",
+"https://vidsrc.xyz/embed/tv/30984/1/3"
+]
+},
+
+{
+title:"Jujutsu Kaisen",
+img:"https://i.imgur.com/2yaf2wb.jpg",
+episodes:[
+"https://vidsrc.xyz/embed/tv/95479/1/1",
+"https://vidsrc.xyz/embed/tv/95479/1/2",
+"https://vidsrc.xyz/embed/tv/95479/1/3"
 ]
 }
+
 ];
 
-const home = document.getElementById("home");
-const player = document.getElementById("player");
-const frame = document.getElementById("frame");
-const epsDiv = document.getElementById("eps");
+const home=document.getElementById("home");
+const player=document.getElementById("playerPage");
+const frame=document.getElementById("frame");
+const eps=document.getElementById("eps");
 
 function load(){
 home.innerHTML="";
@@ -85,10 +103,10 @@ playEp(i,0);
 }
 
 function playEp(i,e){
-frame.src = animeList[i].episodes[e];
-epsDiv.innerHTML="";
+frame.src=animeList[i].episodes[e];
+eps.innerHTML="";
 animeList[i].episodes.forEach((x,n)=>{
-epsDiv.innerHTML+=`<div class="ep" onclick="playEp(${i},${n})">EP ${n+1}</div>`;
+eps.innerHTML+=`<div class="ep" onclick="playEp(${i},${n})">EP ${n+1}</div>`;
 });
 }
 
@@ -110,6 +128,10 @@ home.innerHTML+=`
 </div>`;
 }
 });
+}
+
+function goFull(){
+frame.requestFullscreen();
 }
 </script>
 

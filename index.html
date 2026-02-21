@@ -5,74 +5,72 @@
 <title>AniWatch</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#0b0f19;color:white}
-header{background:#111827;padding:15px}
-.logo{font-size:22px;font-weight:bold}
-.search{margin-top:10px}
-input{width:100%;padding:10px;border-radius:8px;border:none;background:#1f2937;color:white}
-
+body{margin:0;font-family:Arial;background:#020617;color:white}
+header{padding:15px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:15px;padding:15px}
-.card{background:#1f2937;border-radius:12px;overflow:hidden;cursor:pointer;transition:.2s}
-.card:hover{transform:scale(1.05)}
+.card{background:#0f172a;border-radius:12px;overflow:hidden;cursor:pointer}
 .card img{width:100%;height:220px;object-fit:cover}
 .card h3{padding:10px;font-size:14px}
-.tag{font-size:12px;color:#60a5fa;padding:0 10px 10px}
-
-.detail{display:none;padding:15px}
-iframe{width:100%;height:60vh;border:none;border-radius:10px}
-.ep{background:#2563eb;padding:6px 10px;margin:4px;border-radius:6px;display:inline-block}
-.back{background:#111;padding:8px 12px;border-radius:8px;cursor:pointer;margin-bottom:10px;display:inline-block}
+.playerPage{display:none;padding:10px}
+iframe{width:100%;height:80vh;border:none;border-radius:10px}
+.ep{background:#2563eb;padding:8px;margin:4px;border-radius:8px;display:inline-block;cursor:pointer}
+.back{background:#111;padding:8px;border-radius:8px;cursor:pointer;margin-bottom:10px;display:inline-block}
+.full{background:red;padding:8px;border-radius:8px;cursor:pointer;margin-left:10px}
 </style>
 </head>
 
 <body>
 
 <header>
-<div class="logo">AniWatch</div>
-<div class="search">
-<input placeholder="Search anime..." onkeyup="searchAnime(this.value)">
-</div>
+<h2>AniWatch</h2>
 </header>
 
 <div id="home" class="grid"></div>
 
-<div id="detail" class="detail">
-<div class="back" onclick="goHome()">⬅ Back</div>
-<h2 id="title"></h2>
-<p id="genre"></p>
-<iframe id="trailer" allowfullscreen></iframe>
-<h3>Episodes</h3>
-<div id="episodes"></div>
+<div id="playerPage" class="playerPage">
+<div class="back" onclick="goHome()">BACK</div>
+<div class="full" onclick="goFull()">FULL</div>
+<br><br>
+<iframe id="frame"></iframe>
+<div id="eps"></div>
 </div>
 
 <script>
 
-const animeList = [
+function generateEpisodes(id,total){
+let arr=[]
+for(let i=1;i<=total;i++){
+arr.push(`https://vidsrc.xyz/embed/tv/${id}/1/${i}`)
+}
+return arr
+}
+
+const animeList=[
+
 {
 title:"Naruto",
-genre:"Action",
 img:"https://i.imgur.com/4KX7K2K.jpg",
-episodes:[
-"https://www.youtube.com/embed/-G9BqkgZXRA",
-"https://www.youtube.com/embed/MGRm4IzK1SQ",
-"https://www.youtube.com/embed/VQGCKyvzIM4"
-]
+episodes:generateEpisodes(46260,220)
 },
+
 {
-title:"Attack on Titan",
-genre:"Action",
-img:"https://i.imgur.com/lp5qJpK.jpg",
-episodes:[
-"https://www.youtube.com/embed/MGRm4IzK1SQ",
-"https://www.youtube.com/embed/VQGCKyvzIM4"
-]
+title:"Bleach",
+img:"https://i.imgur.com/qn7f4FQ.jpg",
+episodes:generateEpisodes(30984,366)
+},
+
+{
+title:"Jujutsu Kaisen",
+img:"https://i.imgur.com/2yaf2wb.jpg",
+episodes:generateEpisodes(95479,24)
 }
+
 ];
 
 const home=document.getElementById("home")
-const detail=document.getElementById("detail")
-const trailer=document.getElementById("trailer")
-const epDiv=document.getElementById("episodes")
+const player=document.getElementById("playerPage")
+const frame=document.getElementById("frame")
+const eps=document.getElementById("eps")
 
 function load(){
 home.innerHTML=""
@@ -81,7 +79,6 @@ home.innerHTML+=`
 <div class="card" onclick="openAnime(${i})">
 <img src="${a.img}">
 <h3>${a.title}</h3>
-<div class="tag">${a.genre}</div>
 </div>`
 })
 }
@@ -89,41 +86,28 @@ load()
 
 function openAnime(i){
 home.style.display="none"
-detail.style.display="block"
-
-document.getElementById("title").innerText=animeList[i].title
-document.getElementById("genre").innerText=animeList[i].genre
-
+player.style.display="block"
 playEp(i,0)
-
-let epHTML=""
-animeList[i].episodes.forEach((x,n)=>{
-epHTML+=`<div class="ep" onclick="playEp(${i},${n})">EP ${n+1}</div>`
-})
-epDiv.innerHTML=epHTML
 }
 
 function playEp(i,e){
-trailer.src=animeList[i].episodes[e]
+frame.src=animeList[i].episodes[e]
+eps.innerHTML=""
+animeList[i].episodes.forEach((x,n)=>{
+eps.innerHTML+=`<div class="ep" onclick="playEp(${i},${n})">${n+1}</div>`
+})
 }
 
 function goHome(){
-detail.style.display="none"
+player.style.display="none"
 home.style.display="grid"
-trailer.src=""
+frame.src=""
 }
 
-function searchAnime(q){
-q=q.toLowerCase()
-home.innerHTML=""
-animeList.forEach((a,i)=>{
-if(a.title.toLowerCase().includes(q)){
-home.innerHTML+=`
-<div class="card" onclick="openAnime(${i})">
-<img src="${a.img}">
-<h3>${a.title}</h3>
-<div class="tag">${a.genre}</div>
-</div>`
+function goFull(){
+frame.requestFullscreen()
 }
-})
-}
+
+</script>
+</body>
+</html>

@@ -48,51 +48,31 @@ iframe{width:100%;height:60vh;border:none;border-radius:10px}
 <script>
 
 const animeList = [
-
 {
 title:"Naruto",
-genre:"Action • Adventure • Ninja",
+genre:"Action",
 img:"https://i.imgur.com/4KX7K2K.jpg",
-trailer:"https://www.youtube.com/embed/-G9BqkgZXRA",
-totalEp:220
+episodes:[
+"https://www.youtube.com/embed/-G9BqkgZXRA",
+"https://www.youtube.com/embed/MGRm4IzK1SQ",
+"https://www.youtube.com/embed/VQGCKyvzIM4"
+]
 },
-
 {
 title:"Attack on Titan",
-genre:"Action • Dark • Fantasy",
+genre:"Action",
 img:"https://i.imgur.com/lp5qJpK.jpg",
-trailer:"https://www.youtube.com/embed/MGRm4IzK1SQ",
-totalEp:87
-},
-
-{
-title:"Demon Slayer",
-genre:"Action • Supernatural",
-img:"https://i.imgur.com/qn7f4FQ.jpg",
-trailer:"https://www.youtube.com/embed/VQGCKyvzIM4",
-totalEp:55
-},
-
-{
-title:"One Piece",
-genre:"Adventure • Pirates",
-img:"https://i.imgur.com/Wo6QbJZ.jpg",
-trailer:"https://www.youtube.com/embed/S8_YwFLCh4U",
-totalEp:1100
-},
-
-{
-title:"Jujutsu Kaisen",
-genre:"Action • Curses",
-img:"https://i.imgur.com/2yaf2wb.jpg",
-trailer:"https://www.youtube.com/embed/4A_X-Dvl0ws",
-totalEp:47
+episodes:[
+"https://www.youtube.com/embed/MGRm4IzK1SQ",
+"https://www.youtube.com/embed/VQGCKyvzIM4"
+]
 }
-
 ];
 
 const home=document.getElementById("home")
 const detail=document.getElementById("detail")
+const trailer=document.getElementById("trailer")
+const epDiv=document.getElementById("episodes")
 
 function load(){
 home.innerHTML=""
@@ -113,19 +93,24 @@ detail.style.display="block"
 
 document.getElementById("title").innerText=animeList[i].title
 document.getElementById("genre").innerText=animeList[i].genre
-document.getElementById("trailer").src=animeList[i].trailer
 
-let ep=""
-for(let x=1;x<=animeList[i].totalEp;x++){
-ep+=`<div class="ep">EP ${x}</div>`
+playEp(i,0)
+
+let epHTML=""
+animeList[i].episodes.forEach((x,n)=>{
+epHTML+=`<div class="ep" onclick="playEp(${i},${n})">EP ${n+1}</div>`
+})
+epDiv.innerHTML=epHTML
 }
-document.getElementById("episodes").innerHTML=ep
+
+function playEp(i,e){
+trailer.src=animeList[i].episodes[e]
 }
 
 function goHome(){
 detail.style.display="none"
 home.style.display="grid"
-document.getElementById("trailer").src=""
+trailer.src=""
 }
 
 function searchAnime(q){
@@ -142,7 +127,3 @@ home.innerHTML+=`
 }
 })
 }
-
-</script>
-</body>
-</html>
